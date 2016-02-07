@@ -44,6 +44,7 @@ const MxRecord = React.createClass( {
 					<FormLabel>{ this.translate( 'Host', { context: 'MX Dns Record' } ) }</FormLabel>
 					<FormTextInputWithAffixes
 						name="name"
+						placeholder={ this.translate( 'Enter subdomain (required)', { context: 'Placeholder shown when entering the required subdomain part of a new DNS record' } ) }
 						isError={ ! isNameValid }
 						onChange={ this.props.onChange }
 						value={ this.props.fieldValues.name }
