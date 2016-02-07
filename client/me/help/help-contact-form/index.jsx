@@ -9,6 +9,7 @@ import isEqual from 'lodash/lang/isEqual';
 /**
  * Internal dependencies
  */
+import analytics from 'analytics';
 import FormLabel from 'components/forms/form-label';
 import SegmentedControl from 'components/segmented-control';
 import ControlItem from 'components/segmented-control/item';
@@ -116,7 +117,10 @@ module.exports = React.createClass( {
 				value: option.value,
 				title: option.label,
 				onClick: () => {
-					this.setState( { [ selectionName ]: option.value } )
+					this.setState( { [ selectionName ]: option.value } ),
+					analytics.tracks.recordEvent( 'calypso_help_contact_form_click', {
+						button_value: option.value
+					} );
 				}
 			}
 		} ) );
