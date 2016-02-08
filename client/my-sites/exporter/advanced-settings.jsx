@@ -2,12 +2,15 @@
  * External dependencies
  */
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 /**
  * Internal dependencies
  */
 import OptionFieldset from 'my-sites/exporter/option-fieldset';
 import SpinnerButton from './spinner-button';
+
+import { advancedSettings } from 'state/site-settings/exporter/selectors';
 
 /**
  * Displays additional options for customising an export
@@ -16,7 +19,7 @@ import SpinnerButton from './spinner-button';
  * exported. Posts and Pages can also be filtered by Authors, Statuses,
  * and Date.
  */
-export default React.createClass( {
+const AdvancedSettings = React.createClass( {
 	displayName: 'AdvancedSettings',
 
 	propTypes: {
@@ -59,6 +62,8 @@ export default React.createClass( {
 			onSelect: () => this.props.onSelectPostType( key )
 		} );
 
+		const { shouldShowPlaceholders } = this.props;
+
 		return (
 			<div className="exporter__advanced-settings">
 				<h1 className="exporter__advanced-settings-title">
@@ -73,11 +78,11 @@ export default React.createClass( {
 						'content in an .xml file.' ) }
 				</p>
 				<div className="exporter__advanced-settings-row">
-					<OptionFieldset { ...buildOptionProps( 'posts' ) } />
-					<OptionFieldset { ...buildOptionProps( 'pages' ) } />
-					<OptionFieldset { ...buildOptionProps( 'feedback' ) }
+					{ shouldShowPlaceholders || <OptionFieldset { ...buildOptionProps( 'posts' ) } /> }
+					{ shouldShowPlaceholders || <OptionFieldset { ...buildOptionProps( 'pages' ) } /> }
+					{ shouldShowPlaceholders || <OptionFieldset { ...buildOptionProps( 'feedback' ) }
 						description={ this.translate( 'Survey results etc.' ) }
-					/>
+					/> }
 				</div>
 				<SpinnerButton
 					className="exporter__export-button"
@@ -91,3 +96,13 @@ export default React.createClass( {
 		);
 	}
 } );
+
+const mapStateToProps = ( state ) => {
+	const siteId = state.ui.selectedSiteId;
+	return {
+		siteId: siteId,
+		shouldShowPlaceholders: !advancedSettings( state, siteId )
+	};
+};
+
+export default connect( mapStateToProps )( AdvancedSettings );
